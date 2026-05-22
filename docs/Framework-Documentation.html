@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automation Framework Documentation</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --primary: #2563eb;
+      --success: #15803d;
+      --warning: #b45309;
+      --shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Inter", Arial, sans-serif;
+      background: linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 26px;
+    }
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 26px;
+      margin-bottom: 16px;
+    }
+    h1, h2, h3 { margin: 0 0 10px; }
+    h1 { font-size: 30px; letter-spacing: .2px; }
+    h2 {
+      font-size: 22px;
+      margin-top: 24px;
+      border-left: 4px solid var(--primary);
+      padding-left: 10px;
+    }
+    h3 { font-size: 18px; margin-top: 16px; }
+    p { margin: 6px 0; }
+    .muted { color: var(--muted); }
+    .chip {
+      display: inline-block;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      margin-right: 6px;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      background: #eff6ff;
+      font-weight: 600;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 14px;
+      box-shadow: var(--shadow);
+    }
+    .index-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .index-grid a {
+      text-decoration: none;
+      color: #0f172a;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: block;
+      font-size: 14px;
+    }
+    .table-wrap {
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-top: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+    th:last-child, td:last-child { border-right: none; }
+    th {
+      background: #f8fafc;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .3px;
+    }
+    tr:last-child td { border-bottom: none; }
+    .kpi {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .kpi .item {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .kpi .item .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .kpi .item .value {
+      font-size: 22px;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+    .legend {
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .legend b { color: #0f172a; }
+    .pill-ok, .pill-warn {
+      display: inline-block;
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-weight: 700;
+    }
+    .pill-ok { background: #ecfdf3; color: var(--success); border: 1px solid #bbf7d0; }
+    .pill-warn { background: #fff7ed; color: var(--warning); border: 1px solid #fed7aa; }
+    .mono { font-family: Consolas, Menlo, monospace; font-size: 12px; }
+    .arch {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      padding: 12px;
+    }
+    .code-block {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 12px;
+      border: 1px solid #1e293b;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, Menlo, monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      margin-top: 10px;
+      white-space: pre;
+    }
+    .note {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+    .footer {
+      text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 16px;
+    }
+    @media print {
+      body { background: white; }
+      .container { padding: 12px; }
+      .card, .hero { box-shadow: none; }
+      a { color: #0f172a; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>Playwright Automation Framework Guide</h1>
+      <p class="muted">Production-oriented keyword-driven framework documentation</p>
+      <p>
+        <span class="chip">Playwright</span>
+        <span class="chip">Keyword Driven</span>
+        <span class="chip">Excel Based</span>
+        <span class="chip">PDF Validation</span>
+      </p>
+      <div class="kpi">
+        <div class="item"><div class="label">Supported Field Types</div><div class="value">12</div></div>
+        <div class="item"><div class="label">Action Keywords</div><div class="value">10+</div></div>
+        <div class="item"><div class="label">Core Layers</div><div class="value">3</div></div>
+        <div class="item"><div class="label">Data Sources</div><div class="value">Excel + .env</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="index">
+      <h2>Index</h2>
+      <div class="index-grid">
+        <a href="#intro">1. Introduction</a>
+        <a href="#capabilities">2. Framework Capabilities</a>
+        <a href="#architecture">3. Architecture Diagram</a>
+        <a href="#execution-flow">4. Execution Flow</a>
+        <a href="#field-types">5. Field Types and Actions</a>
+        <a href="#testsuite-structure">6. TestSuite Structure</a>
+        <a href="#or-structure">7. ObjectRepository Structure</a>
+        <a href="#samples">8. Example Data Sheets</a>
+        <a href="#env-config">9. Environment Configuration</a>
+        <a href="#extensibility">10. Extensibility Guide for Testers</a>
+        <a href="#standards">11. Documentation Standards</a>
+      </div>
+    </section>
+
+    <section class="card" id="intro">
+      <h2>1) Introduction</h2>
+      <p>
+        This framework is a <b>keyword-driven Playwright automation framework</b> where test steps are
+        authored in Excel sheets and executed through reusable action handlers.
+      </p>
+      <p>
+        It is designed for both automation engineers and business users by separating
+        <b>test intent (what to do)</b> from <b>technical implementation (how to do)</b>.
+      </p>
+    </section>
+
+    <section class="card" id="capabilities">
+      <h2>2) Framework Capabilities</h2>
+      <ul>
+        <li>Data-driven transaction execution from TestSuite and ObjectRepository.</li>
+        <li>Supports common UI actions (input, click, validation, dropdown, window/frame switch).</li>
+        <li>Dynamic data read/write support for cross-step data management.</li>
+        <li>Download handling and advanced PDF comparison with HTML diff reports.</li>
+        <li>Config-driven behavior using <span class="mono">.env</span> (URLs, paths, report settings, exclusions).</li>
+      </ul>
+    </section>
+
+    <section class="card" id="architecture">
+      <h2>3) Architecture Diagram</h2>
+      <div class="arch">
+        <svg viewBox="0 0 1040 470" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <style>
+              .box{fill:#ffffff;stroke:#cbd5e1;stroke-width:1.5;rx:10}
+              .title{font:700 14px Segoe UI,Arial;fill:#0f172a}
+              .txt{font:12px Segoe UI,Arial;fill:#334155}
+              .arrow{stroke:#64748b;stroke-width:1.8;marker-end:url(#m)}
+            </style>
+            <marker id="m" markerWidth="8" markerHeight="8" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#64748b"/>
+            </marker>
+          </defs>
+
+          <rect class="box" x="40" y="30" width="250" height="90"/>
+          <text class="title" x="58" y="55">Tests/TestExecutor.spec.js</text>
+          <text class="txt" x="58" y="77">- Opens APPLICATION_URL</text>
+          <text class="txt" x="58" y="95">- Iterates transactions</text>
+
+          <rect class="box" x="370" y="30" width="260" height="90"/>
+          <text class="title" x="388" y="55">TestExecutionManager</text>
+          <text class="txt" x="388" y="77">- Finds transaction rows</text>
+          <text class="txt" x="388" y="95">- Calls StepExecutor per step</text>
+
+          <rect class="box" x="710" y="30" width="270" height="90"/>
+          <text class="title" x="728" y="55">StepExecutor</text>
+          <text class="txt" x="728" y="77">- Parses xpath</text>
+          <text class="txt" x="728" y="95">- Routes fieldType + action</text>
+
+          <rect class="box" x="710" y="170" width="270" height="120"/>
+          <text class="title" x="728" y="194">ActionPerformer</text>
+          <text class="txt" x="728" y="216">- UI Actions & Context Switch</text>
+          <text class="txt" x="728" y="234">- Downloads, Dynamic Data</text>
+          <text class="txt" x="728" y="252">- PDF Validation orchestration</text>
+
+          <rect class="box" x="370" y="330" width="260" height="110"/>
+          <text class="title" x="388" y="355">ExcelUtils</text>
+          <text class="txt" x="388" y="377">- Reads TestSuite/ObjectRepository</text>
+          <text class="txt" x="388" y="395">- Maintains DynamicData sheet</text>
+
+          <rect class="box" x="710" y="330" width="270" height="110"/>
+          <text class="title" x="728" y="355">PdfValidationUtils</text>
+          <text class="txt" x="728" y="377">- Extracts text via pdf-parse</text>
+          <text class="txt" x="728" y="395">- Exclusion DSL + HTML diff report</text>
+
+          <rect class="box" x="40" y="330" width="250" height="110"/>
+          <text class="title" x="58" y="355">External Inputs</text>
+          <text class="txt" x="58" y="377">- TestSuite.xlsx</text>
+          <text class="txt" x="58" y="395">- ObjectRepository.xlsx</text>
+          <text class="txt" x="58" y="413">- .env</text>
+
+          <line class="arrow" x1="290" y1="75" x2="370" y2="75"/>
+          <line class="arrow" x1="630" y1="75" x2="710" y2="75"/>
+          <line class="arrow" x1="845" y1="120" x2="845" y2="170"/>
+          <line class="arrow" x1="500" y1="120" x2="500" y2="330"/>
+          <line class="arrow" x1="845" y1="290" x2="845" y2="330"/>
+          <line class="arrow" x1="290" y1="385" x2="370" y2="385"/>
+          <line class="arrow" x1="630" y1="385" x2="710" y2="385"/>
+        </svg>
+      </div>
+      <p class="legend"><b>Legend:</b> The framework takes data from Excel + <span class="mono">.env</span>, routes steps through execution layers, and generates actionable reports.</p>
+    </section>
+
+    <section class="card" id="execution-flow">
+      <h2>4) Execution Flow (Standard Procedure)</h2>
+      <ol>
+        <li>Read test cases from TestSuite control sheet and filter executable rows.</li>
+        <li>Open browser using <span class="mono">APPLICATION_URL</span>.</li>
+        <li>Resolve each transaction to corresponding TestSuite and ObjectRepository sheets.</li>
+        <li>For each step, map <span class="mono">fieldType + action</span> to the exact performer method.</li>
+        <li>Execute UI/API/data actions; generate Playwright + custom reports for evidence.</li>
+      </ol>
+    </section>
+
+    <section class="card" id="field-types">
+      <h2>5) Field Types and Associated Actions</h2>
+
+      <h3>Text Box</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Action</th><th>Description</th><th>Test Data Usage</th></tr></thead>
+          <tbody><tr><td class="mono">I</td><td>Inputs text into a textbox locator.</td><td>Enter the text value.</td></tr></tbody></table>
+      </div>
+
+      <h3>Button</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Action</th><th>Description</th><th>Test Data Usage</th></tr></thead>
+          <tbody><tr><td class="mono">C</td><td>Clicks a button or clickable element.</td><td>Any non-null value to trigger action.</td></tr></tbody></table>
+      </div>
+
+      <h3>Checkbox</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Action</th><th>Description</th><th>Test Data Usage</th></tr></thead>
+          <tbody><tr><td class="mono">C</td><td>Checks/Unchecks based on test data.</td><td>Use exactly <span class="mono">Check</span> or <span class="mono">Uncheck</span>.</td></tr></tbody></table>
+      </div>
+
+      <h3>Label</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Action</th><th>Description</th><th>Test Data Usage</th></tr></thead>
+          <tbody><tr><td class="mono">V</td><td>Validates locator text equals expected.</td><td>Expected visible text.</td></tr></tbody></table>
+      </div>
+
+      <h3>Dropdown</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Action</th><th>Description</th><th>Test Data Usage</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">I</td><td>Selects by option value.</td><td>Option value/string.</td></tr>
+            <tr><td class="mono">INDEX_SELECTION</td><td>Selects dropdown item by index.</td><td>Numeric index (single digit in current logic).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>SwitchToIFrame</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Action</th><th>Description</th><th>Test Data Usage</th></tr></thead>
+          <tbody><tr><td class="mono">SWITCH</td><td>Switches context into iframe.</td><td>Any non-null trigger value.</td></tr></tbody></table>
+      </div>
+
+      <h3>SwitchToWindow</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Action</th><th>Description</th><th>Test Data Usage</th></tr></thead>
+          <tbody><tr><td class="mono">SWITCH_WINDOW</td><td>Clicks locator and switches to newly opened window/tab.</td><td>Any non-null trigger value.</td></tr></tbody></table>
+      </div>
+
+      <h3>SwitchToMainWindow</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Action</th><th>Description</th><th>Test Data Usage</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">SWITCH</td><td>Switches back to parent/main page context.</td><td>Not required.</td></tr>
+            <tr><td class="mono">SWITCH_BY_TITLE</td><td>Switches to window by title.</td><td>Provide target window title.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>DynamicDataHandler</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Action</th><th>Description</th><th>Test Data Usage</th></tr></thead>
+          <tbody><tr><td class="mono">W;;&lt;COLUMN_NAME&gt;</td><td>Writes extracted UI text to dynamic data sheet.</td><td>Uses current locator text content.</td></tr></tbody></table>
+      </div>
+
+      <h3>PdfValidation</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Action</th><th>Description</th><th>Test Data Usage</th></tr></thead>
+          <tbody><tr><td class="mono">V</td><td>Downloads PDF, compares with expected PDF, applies exclusion DSL, generates HTML diff report and attaches artifacts.</td><td>Expected file name (with/without <span class="mono">.pdf</span>).</td></tr></tbody></table>
+      </div>
+
+      <h3>API</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Action</th><th>Description</th><th>Status</th></tr></thead>
+          <tbody><tr><td class="mono">GET</td><td>Reserved for API GET execution path.</td><td><span class="pill-warn">Placeholder</span></td></tr></tbody></table>
+      </div>
+
+      <h3>OCR</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Action</th><th>Description</th><th>Status</th></tr></thead>
+          <tbody><tr><td class="mono">N/A</td><td>OCR field type hook exists for future implementation.</td><td><span class="pill-warn">Placeholder</span></td></tr></tbody></table>
+      </div>
+    </section>
+
+    <section class="card" id="testsuite-structure">
+      <h2>6) TestSuite Structure</h2>
+      <p><b>Control Sheet:</b> Used to list scenarios, execution flag, and transactions.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Column</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">A</td><td>TestCaseName</td></tr>
+            <tr><td class="mono">B</td><td>Category</td></tr>
+            <tr><td class="mono">C</td><td>Execute (Y/N)</td></tr>
+            <tr><td class="mono">D onward</td><td>Transaction names to run in sequence</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>Transaction Sheets:</b> Row 1 = TestCase IDs across columns, Row 2 = Transaction names, Row 3 onward = step data with Field Name in column A.</p>
+    </section>
+
+    <section class="card" id="or-structure">
+      <h2>7) ObjectRepository Structure</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Column</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">A</td><td>Field Name (must match TestSuite field name)</td></tr>
+            <tr><td class="mono">B</td><td>Field Type (e.g., Text Box, PdfValidation)</td></tr>
+            <tr><td class="mono">C</td><td>Action keyword (e.g., I, C, V, SWITCH)</td></tr>
+            <tr><td class="mono">D</td><td>Xpath / locator expression</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" id="samples">
+      <h2>8) Sample Data Structures</h2>
+      <h3>Sample TestSuite (Transaction Sheet)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field Name</th><th>TC_PDF_001 / TXN_PDF_VALIDATE</th></tr></thead>
+          <tbody>
+            <tr><td>Download Brochure</td><td>Get_Started_With_Smallpdf.pdf</td></tr>
+            <tr><td>Customer Name</td><td>John Doe</td></tr>
+            <tr><td>Invoice Date</td><td>12/04/2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Sample ObjectRepository (Same Sheet Name)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field Name</th><th>Field Type</th><th>Action</th><th>Xpath</th></tr></thead>
+          <tbody>
+            <tr><td>Download Brochure</td><td>PdfValidation</td><td>V</td><td>//a[@id='download-pdf']</td></tr>
+            <tr><td>Customer Name</td><td>Text Box</td><td>I</td><td>//input[@name='customerName']</td></tr>
+            <tr><td>Invoice Date</td><td>Label</td><td>V</td><td>//span[@id='invoiceDate']</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" id="env-config">
+      <h2>9) Environment Configuration (.env)</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Variable</th><th>Purpose</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">APPLICATION_URL</td><td>Application base URL for test navigation</td><td class="mono">https://example.com</td></tr>
+            <tr><td class="mono">DOWNLOAD_FOLDER_PATH</td><td>Target folder for downloaded PDFs and reports</td><td class="mono">F:/PlaywrightTests/AutomationFramework/project/test/downloads</td></tr>
+            <tr><td class="mono">EXCLUDE_CONTENT</td><td>Custom DSL for dynamic text exclusions in PDF comparison</td><td class="mono">WORD:John;;DATE:ANY;;REGEX:/Invoice\\s*No\\s*:\\s*\\w+/i</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="legend"><span class="pill-ok">Tip</span> Keep expected files under <span class="mono">DOWNLOAD_FOLDER_PATH/expected</span>.</p>
+    </section>
+
+    <section class="card" id="extensibility">
+      <h2>10) Extensibility Guide for Automation Testers</h2>
+      <p>
+        This framework follows a <b>dispatch pattern</b> where each step is mapped by <span class="mono">fieldType + action</span>.
+        To extend the framework safely, add code in a controlled sequence: <b>ActionPerformer method</b> → <b>StepExecutor route</b> → <b>Excel updates</b>.
+      </p>
+
+      <h3>A) Add New Action to Existing Field Type</h3>
+      <p><b>Use case:</b> Add action <span class="mono">DBL_C</span> (double click) for existing <span class="mono">Button</span> field type.</p>
+      <ol>
+        <li>Create a reusable method in <span class="mono">ActionPerformer.js</span>.</li>
+        <li>Add a new route condition in <span class="mono">StepExecutor.js</span>.</li>
+        <li>Update ObjectRepository row with field type and new action keyword.</li>
+        <li>Add test data row in TestSuite transaction sheet.</li>
+      </ol>
+      <div class="code-block">/* ActionPerformer.js */
+async performDoubleClickAction(testData, locator){
+  if(testData !== null){
+    await this.page.locator(locator).dblclick();
+  }
+}
+
+/* StepExecutor.js */
+else if(objectRepositoryStep.fieldType==="Button" && objectRepositoryStep.action==="DBL_C"){
+  await this.actionPerformer.performDoubleClickAction(testSuiteStep.data, objectRepositoryStep.xpath);
+}</div>
+      <div class="note">
+        Technical recommendation: keep action methods <b>idempotent</b> where possible and always include clear guard clauses for null/invalid test data.
+      </div>
+
+      <h3>B) Add a Brand-New Field Type</h3>
+      <p><b>Use case:</b> Add <span class="mono">FileUpload</span> field type with action <span class="mono">U</span>.</p>
+      <ol>
+        <li>Define a strongly scoped method in <span class="mono">ActionPerformer.js</span>.</li>
+        <li>Register new dispatch branch in <span class="mono">StepExecutor.js</span>.</li>
+        <li>Add ObjectRepository row with FieldType=<span class="mono">FileUpload</span>, Action=<span class="mono">U</span>, locator for file input.</li>
+        <li>Provide file path in TestSuite data cell.</li>
+      </ol>
+      <div class="code-block">/* ActionPerformer.js */
+import fs from "fs";
+
+async performFileUploadAction(testData, locator){
+  if(testData !== null){
+    if(!fs.existsSync(testData)){
+      throw new Error(`Upload file not found: ${testData}`);
+    }
+    await this.page.locator(locator).setInputFiles(testData);
+  }
+}
+
+/* StepExecutor.js */
+else if(objectRepositoryStep.fieldType==="FileUpload" && objectRepositoryStep.action==="U"){
+  await this.actionPerformer.performFileUploadAction(testSuiteStep.data, objectRepositoryStep.xpath);
+}</div>
+
+      <h3>C) Sample Excel Rows for New Implementations</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field Name</th><th>Field Type</th><th>Action</th><th>Xpath</th><th>TestSuite Data Example</th></tr></thead>
+          <tbody>
+            <tr><td>Submit Request</td><td>Button</td><td>DBL_C</td><td>//button[@id='submit']</td><td>Y</td></tr>
+            <tr><td>Upload Invoice</td><td>FileUpload</td><td>U</td><td>//input[@type='file']</td><td>F:/test-data/invoice.pdf</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>D) Engineering Checklist (Production-Grade)</h3>
+      <ul>
+        <li>Use deterministic action keywords and avoid overloaded semantics.</li>
+        <li>Validate preconditions (path existence, locator validity, required env variables).</li>
+        <li>Emit meaningful failures with step context (<span class="mono">fieldName</span>, <span class="mono">fieldType</span>, <span class="mono">action</span>).</li>
+        <li>Attach artifacts when behavior is complex (downloaded files, diff reports, screenshots).</li>
+        <li>Prefer reusable utility classes for cross-cutting logic (parsing, comparison, transformations).</li>
+      </ul>
+    </section>
+
+    <section class="card" id="standards">
+      <h2>11) Documentation & Usage Standards</h2>
+      <ul>
+        <li>Use consistent naming between TestSuite Field Name and ObjectRepository Field Name.</li>
+        <li>Use explicit action keywords and valid field types only.</li>
+        <li>Store expected PDFs in <span class="mono">expected</span> folder with stable naming convention.</li>
+        <li>For dynamic documents, use <span class="mono">EXCLUDE_CONTENT</span> DSL to avoid false mismatches.</li>
+        <li>Attach generated reports as part of execution evidence in Playwright HTML report.</li>
+      </ul>
+    </section>
+
+    <div class="footer">Generated for Automation Framework Documentation</div>
+  </div>
+</body>
+</html>
