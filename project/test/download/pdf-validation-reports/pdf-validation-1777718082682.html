@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Validation Report</title>
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --primary: #2563eb;
+            --success: #15803d;
+            --success-soft: #f0fdf4;
+            --danger: #b91c1c;
+            --danger-soft: #fef2f2;
+            --shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+            color: var(--text);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+        }
+        .title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .status-pass {
+            color: var(--success);
+            background: var(--success-soft);
+            border: 1px solid #bbf7d0;
+        }
+        .status-fail {
+            color: var(--danger);
+            background: var(--danger-soft);
+            border: 1px solid #fecaca;
+        }
+        .subtext {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .metric {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            box-shadow: var(--shadow);
+        }
+        .metric-label {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.35px;
+        }
+        .metric-value {
+            margin: 6px 0 0;
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .meta-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            box-shadow: var(--shadow);
+        }
+        .meta-title {
+            margin: 0 0 6px;
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.35px;
+        }
+        .meta-value {
+            margin: 0;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .pill-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .pill {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid #bfdbfe;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-weight: 600;
+        }
+        .pill.neutral {
+            border-color: #d1d5db;
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+        .table-wrap {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background: var(--card);
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+        }
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: #f8fafc;
+            color: #111827;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.35px;
+            border-bottom: 1px solid var(--border);
+            padding: 12px 14px;
+        }
+        td {
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            padding: 10px 12px;
+            vertical-align: top;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+        td:last-child, th:last-child { border-right: none; }
+        tbody tr:last-child td { border-bottom: none; }
+        .line-col {
+            width: 8%;
+            text-align: center;
+            font-weight: 600;
+            color: var(--muted);
+            background: #fcfdff;
+        }
+        .match-row:hover td {
+            background: #f9fbff;
+        }
+        .mismatch-row:hover td {
+            background: #fff1f1;
+        }
+        .match-cell {
+            background: #ffffff;
+            color: var(--text);
+        }
+        .mismatch-cell {
+            background: #fff1f1;
+            color: #7f1d1d;
+            font-weight: 600;
+        }
+        .footer {
+            margin-top: 14px;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: right;
+        }
+        @media (max-width: 860px) {
+            body { padding: 14px; }
+            h1 { font-size: 20px; }
+            .metric-value { font-size: 18px; }
+            td, thead th { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-row">
+                <h1>PDF Validation Report</h1>
+                <span class="status-badge status-fail">
+                    Failed
+                </span>
+            </div>
+            <p class="subtext">Generated on 5/2/2026, 4:04:42 PM</p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric">
+                <p class="metric-label">Total Lines Compared</p>
+                <p class="metric-value">28</p>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Matched Lines</p>
+                <p class="metric-value">24</p>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Mismatched Lines</p>
+                <p class="metric-value" style="color:var(--danger);">4</p>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Match Percentage</p>
+                <p class="metric-value">85.71%</p>
+            </div>
+        </div>
+
+        <div class="meta-grid">
+            <div class="meta-card">
+                <p class="meta-title">Expected PDF</p>
+                <p class="meta-value">F:\PlaywrightTests\AutomationFramework\project\test\download\expected\Get_Started_With_Smallpdf.pdf</p>
+            </div>
+            <div class="meta-card">
+                <p class="meta-title">Actual PDF</p>
+                <p class="meta-value">F:\PlaywrightTests\AutomationFramework\project\test\download\Get_Started_With_Smallpdf.pdf</p>
+            </div>
+            <div class="meta-card">
+                <p class="meta-title">Applied Exclusion Rules (EXCLUDE_CONTENT DSL)</p>
+                <div class="pill-wrap"><span class="pill">WORD:Sudha</span><span class="pill">DATE:ANY</span><span class="pill">REGEX:/\\b\\d{2}:\\d{2}:\\d{2}\\b/g</span></div>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 8%;">Line</th>
+                        <th style="width: 46%;">Expected Content</th>
+                        <th style="width: 46%;">Actual Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="match-row">
+                <td class="line-col">1</td>
+                <td class="match-cell">Welcome to Smallpdf</td>
+                <td class="match-cell">Welcome to Smallpdf</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">2</td>
+                <td class="match-cell">Digital Documents—All In One Place</td>
+                <td class="match-cell">Digital Documents—All In One Place</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">3</td>
+                <td class="match-cell">Access Files Anytime, Anywhere</td>
+                <td class="match-cell">Access Files Anytime, Anywhere</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">4</td>
+                <td class="match-cell">Enhance Documents in One Click</td>
+                <td class="match-cell">Enhance Documents in One Click</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">5</td>
+                <td class="match-cell">Collaborate With Others</td>
+                <td class="match-cell">Collaborate With Others</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">6</td>
+                <td class="match-cell">With the new Smallpdf experience, you can</td>
+                <td class="match-cell">With the new Smallpdf experience, you can</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">7</td>
+                <td class="match-cell">freely upload, organize, and share digital</td>
+                <td class="match-cell">freely upload, organize, and share digital</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">8</td>
+                <td class="match-cell">documents. When you enable the ‘Storage’</td>
+                <td class="match-cell">documents. When you enable the ‘Storage’</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">9</td>
+                <td class="match-cell">option, we’ll also store all processed files here.</td>
+                <td class="match-cell">option, we’ll also store all processed files here.</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">10</td>
+                <td class="match-cell">You can access files stored on Smallpdf from</td>
+                <td class="match-cell">You can access files stored on Smallpdf from</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">11</td>
+                <td class="match-cell">your computer, phone, or tablet. We’ll also</td>
+                <td class="match-cell">your computer, phone, or tablet. We’ll also</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">12</td>
+                <td class="match-cell">sync files from the Smallpdf Mobile App to our</td>
+                <td class="match-cell">sync files from the Smallpdf Mobile App to our</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">13</td>
+                <td class="match-cell">online portal</td>
+                <td class="match-cell">online portal</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">14</td>
+                <td class="match-cell">When you right-click on a file, we’ll present</td>
+                <td class="match-cell">When you right-click on a file, we’ll present</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">15</td>
+                <td class="match-cell">you with an array of options to convert,</td>
+                <td class="match-cell">you with an array of options to convert,</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">16</td>
+                <td class="match-cell">compress, or modify it.</td>
+                <td class="match-cell">compress, or modify it.</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">17</td>
+                <td class="match-cell">Forget mundane administrative tasks. With</td>
+                <td class="match-cell">Forget mundane administrative tasks. With</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">18</td>
+                <td class="match-cell">Smallpdf, you can request e-signatures, send</td>
+                <td class="match-cell">Smallpdf, you can request e-signatures, send</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">19</td>
+                <td class="match-cell">large files, or even enable the Smallpdf G Suite</td>
+                <td class="match-cell">large files, or even enable the Smallpdf G Suite</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">20</td>
+                <td class="match-cell">App for your entire organization.</td>
+                <td class="match-cell">App for your entire organization.</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">21</td>
+                <td class="match-cell">Ready to take document management to the next level?</td>
+                <td class="match-cell">Ready to take document management to the next level?</td>
+            </tr>
+<tr class="mismatch-row">
+                <td class="line-col">22</td>
+                <td class="mismatch-cell">Your text h</td>
+                <td class="mismatch-cell">&nbsp;</td>
+            </tr>
+<tr class="mismatch-row">
+                <td class="line-col">23</td>
+                <td class="mismatch-cell">Some ttext</td>
+                <td class="mismatch-cell">-- 1 of 1 --</td>
+            </tr>
+<tr class="mismatch-row">
+                <td class="line-col">24</td>
+                <td class="mismatch-cell">ere 3</td>
+                <td class="mismatch-cell">&nbsp;</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">25</td>
+                <td class="match-cell">&nbsp;</td>
+                <td class="match-cell">&nbsp;</td>
+            </tr>
+<tr class="mismatch-row">
+                <td class="line-col">26</td>
+                <td class="mismatch-cell">-- 1 of 1 --</td>
+                <td class="mismatch-cell">&nbsp;</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">27</td>
+                <td class="match-cell">&nbsp;</td>
+                <td class="match-cell">&nbsp;</td>
+            </tr>
+<tr class="match-row">
+                <td class="line-col">28</td>
+                <td class="match-cell">&nbsp;</td>
+                <td class="match-cell">&nbsp;</td>
+            </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="footer">Automation Framework PDF Validator</p>
+    </div>
+</body>
+</html>
