@@ -16,6 +16,8 @@ export default class ExecutionManager{
         console.log(response)
         const testSuiteData=response.testSuiteData
         const objectRepositoryData=response.objects;
+        console.log(`USER_NAME : ${process.env.USER_NAME}`)
+        console.log(`USER_PASSWORD : ${process.env.USER_PASSWORD}`)
         for(let i=0;i<testSuiteData.length;i++){
              await test.step(`performing action ${objectRepositoryData[i].action} on Field ${objectRepositoryData[i].fieldType} with locator ${objectRepositoryData[i].xpath} and TestData : ${testSuiteData[i].data}`,async ()=>{
                     await this.stepExecutor.executeStep(testSuiteData[i],objectRepositoryData[i])
