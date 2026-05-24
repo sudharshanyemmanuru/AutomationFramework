@@ -1,10 +1,13 @@
 import ExcelJS from "exceljs";
 import fs from 'fs'
 import path from "path";
+import dotenv from 'dotenv'
+dotenv.config()
 export default class ExcelUtils {
 
   async openTestSuite() {
     const workbook = new ExcelJS.Workbook();
+    console.log(`path : ${process.env.TEST_SUITE_PATH}`)
     await workbook.xlsx.readFile(process.env.TEST_SUITE_PATH);
     return workbook;
   }
