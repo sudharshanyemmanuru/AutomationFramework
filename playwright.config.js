@@ -22,7 +22,7 @@ export default defineConfig({
     screenshot:captureScreenshots(),
     video:'retain-on-failure',
     browserName:'chromium',
-    headless:HEADLESS_MODE(),
+    headless:process.env.CI ? false: HEADLESS_MODE(),
     trace:'on-first-retry',
     baseURL:APPURL
   },
